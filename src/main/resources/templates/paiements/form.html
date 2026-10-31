@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouveau paiement</title>
+    <link rel="stylesheet" th:href="@{/css/paiements.css}">
+</head>
+<body>
+
+<div class="container form-container">
+
+    <h1>Enregistrer un paiement</h1>
+
+    <p class="error"
+       th:if="${error}"
+       th:text="${error}"></p>
+
+    <form th:action="@{/admin/paiements/ajouter}"
+          method="post">
+
+        <label for="stationnementId">
+            Stationnement terminé
+        </label>
+
+        <select id="stationnementId"
+                name="stationnementId"
+                required>
+
+            <option value="">
+                -- Sélectionner un stationnement --
+            </option>
+
+            <option th:each="stationnement : ${stationnements}"
+                    th:value="${stationnement.id}"
+                    th:text="${'Stationnement #' + stationnement.id
+                        + ' - ' + stationnement.vehicule.immatriculation
+                        + ' - ' + stationnement.montantTotal + ' Ar'}">
+            </option>
+        </select>
+
+        <label for="modePaiement">
+            Mode de paiement
+        </label>
+
+        <select id="modePaiement"
+                name="modePaiement"
+                required>
+
+            <option value="">
+                -- Sélectionner un mode --
+            </option>
+
+            <option th:each="mode : ${modesPaiement}"
+                    th:value="${mode}"
+                    th:text="${mode}">
+            </option>
+        </select>
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Créer le paiement
+            </button>
+
+            <a th:href="@{/admin/paiements}"
+               class="btn btn-secondary">
+                Retour
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

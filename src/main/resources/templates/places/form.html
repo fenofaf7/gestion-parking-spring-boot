@@ -1,0 +1,121 @@
+
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Ajouter une place</title>
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+    
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar}" />
+
+    <div class="main-wrapper">
+
+        <th:block th:replace="~{fragments/header :: header}" />
+
+        <main class="main-content">
+
+            <div class="page-heading">
+                <h1>Ajouter une place</h1>
+                <p class="muted">
+                    Enregistrer une nouvelle place de parking.
+                </p>
+            </div>
+
+            <div th:if="${error}"
+                 class="alert alert-error"
+                 th:text="${error}">
+            </div>
+
+            <div class="form-card">
+
+                <form th:action="@{/admin/places/ajouter}"
+                      method="post">
+
+                    <div class="form-field">
+                        <label for="numero">Numéro</label>
+
+                        <input id="numero"
+                               name="numero"
+                               type="text"
+                               placeholder="Ex : A-001"
+                               required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="zone">Zone</label>
+							<input id="zone"
+							       name="zone"
+							       type="text"
+							       placeholder="Ex : A, B, C"
+							       maxlength="30"
+							       required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="typePlaceId">
+                            Type de place
+                        </label>
+
+                        <select id="typePlaceId"
+                                name="typePlaceId"
+                                required>
+
+                            <option value="">
+                                Choisir un type
+                            </option>
+
+                            <option th:each="type : ${typesPlace}"
+                                    th:value="${type.id}"
+                                    th:text="${type.nom}">
+                            </option>
+
+                        </select>
+                    </div>
+
+                    <div class="form-actions">
+
+                        <button type="submit"
+                                class="btn btn-primary">
+                            Enregistrer
+                        </button>
+
+                        <a th:href="@{/admin/places}"
+                           class="btn btn-secondary">
+                            Annuler
+                        </a>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

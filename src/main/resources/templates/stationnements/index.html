@@ -1,0 +1,106 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des stationnements</title>
+    <link rel="stylesheet" th:href="@{/css/stationnements.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Gestion des stationnements</h1>
+
+    <div class="summary">
+        <div class="summary-card">
+            <span>Stationnements en cours</span>
+            <strong th:text="${stationnementsEnCours}">0</strong>
+        </div>
+    </div>
+
+    <div class="actions">
+        <a th:href="@{/admin/dashboard}" class="btn btn-secondary">
+            Tableau de bord
+        </a>
+
+        <a th:href="@{/admin/stationnements/ajouter}" class="btn">
+            + Enregistrer une entrée
+        </a>
+    </div>
+
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Véhicule</th>
+                    <th>Place</th>
+                    <th>Entrée</th>
+                    <th>Sortie</th>
+                    <th>Statut</th>
+                    <th>Montant</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="stationnement : ${stationnements}">
+
+                    <td th:text="${stationnement.id}"></td>
+
+                    <td th:text="${stationnement.vehicule.immatriculation}"></td>
+
+                    <td th:text="${stationnement.place.numero}"></td>
+
+                    <td th:text="${#temporals.format(
+                        stationnement.dateEntree, 'dd/MM/yyyy HH:mm')}"></td>
+
+                    <td th:text="${stationnement.dateSortie != null
+                        ? #temporals.format(
+                            stationnement.dateSortie, 'dd/MM/yyyy HH:mm')
+                        : '-'}"></td>
+
+                    <td>
+                        <span class="status"
+                              th:classappend="${stationnement.statut.name() == 'EN_COURS'
+                                  ? 'status-active' : 'status-finished'}"
+                              th:text="${stationnement.statut}">
+                        </span>
+                    </td>
+
+                    <td th:text="${stationnement.montantTotal != null
+                        ? stationnement.montantTotal + ' Ar'
+                        : 'À calculer'}"></td>
+
+                    <td>
+                        <form th:if="${stationnement.statut.name() == 'EN_COURS'}"
+                              th:action="@{/admin/stationnements/{id}/sortie(id=${stationnement.id})}"
+                              method="post"
+                              onsubmit="return confirm('Confirmer la sortie du véhicule ?')">
+
+                            <button class="btn btn-danger" type="submit">
+                                Enregistrer la sortie
+                            </button>
+                        </form>
+
+                        <span th:if="${stationnement.statut.name() != 'EN_COURS'}">
+                            Terminé
+                        </span>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(stationnements)}">
+                    <td colspan="8">Aucun stationnement enregistré.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des paiements</title>
+    <link rel="stylesheet" th:href="@{/css/paiements.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Gestion des paiements</h1>
+
+    <div class="actions">
+        <a th:href="@{/admin/dashboard}"
+           class="btn btn-secondary">
+            Tableau de bord
+        </a>
+
+        <a th:href="@{/admin/paiements/ajouter}"
+           class="btn">
+            + Nouveau paiement
+        </a>
+    </div>
+
+    <p class="success"
+       th:if="${success}"
+       th:text="${success}"></p>
+
+    <p class="error"
+       th:if="${error}"
+       th:text="${error}"></p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Référence</th>
+                    <th>Stationnement</th>
+                    <th>Véhicule</th>
+                    <th>Montant</th>
+                    <th>Mode</th>
+                    <th>Statut</th>
+                    <th>Date paiement</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="paiement : ${paiements}">
+
+                    <td th:text="${paiement.id}"></td>
+
+                    <td th:text="${paiement.reference}"></td>
+
+                    <td th:text="${paiement.stationnement.id}"></td>
+
+                    <td th:text="${paiement.stationnement.vehicule.immatriculation}"></td>
+
+                    <td th:text="${paiement.montant + ' Ar'}"></td>
+
+                    <td th:text="${paiement.modePaiement}"></td>
+
+                    <td>
+                        <span class="status"
+                              th:classappend="${paiement.statut.name() == 'CONFIRME'
+                                  ? 'confirmed'
+                                  : (paiement.statut.name() == 'EN_ATTENTE'
+                                      ? 'pending' : 'failed')}"
+                              th:text="${paiement.statut}">
+                        </span>
+                    </td>
+
+                    <td th:text="${paiement.datePaiement != null
+                        ? #temporals.format(
+                            paiement.datePaiement,
+                            'dd/MM/yyyy HH:mm')
+                        : '-'}">
+                    </td>
+
+                    <td>
+                        <form th:if="${paiement.statut.name() == 'EN_ATTENTE'}"
+                              th:action="@{/admin/paiements/{id}/confirmer(id=${paiement.id})}"
+                              method="post"
+                              onsubmit="return confirm('Confirmer ce paiement ?')">
+
+                            <button type="submit"
+                                    class="btn btn-success">
+                                Confirmer
+                            </button>
+                        </form>
+
+                        <span th:unless="${paiement.statut.name() == 'EN_ATTENTE'}">
+                            -
+                        </span>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(paiements)}">
+                    <td colspan="9">
+                        Aucun paiement enregistré.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

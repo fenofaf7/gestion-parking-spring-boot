@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ajouter un véhicule</title>
+    <link rel="stylesheet" th:href="@{/css/vehicules.css}">
+</head>
+<body>
+
+<div class="container form-container">
+
+    <h1>Ajouter un véhicule</h1>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/admin/vehicules/ajouter}" method="post">
+
+        <label for="immatriculation">Immatriculation</label>
+        <input type="text" id="immatriculation"
+               name="immatriculation" required>
+
+        <label for="marque">Marque</label>
+        <input type="text" id="marque" name="marque" required>
+
+        <label for="modele">Modèle</label>
+        <input type="text" id="modele" name="modele" required>
+
+        <label for="couleur">Couleur</label>
+        <input type="text" id="couleur" name="couleur">
+
+        <label for="proprietaireId">Propriétaire</label>
+        <select id="proprietaireId" name="proprietaireId">
+            <option value="">Aucun propriétaire</option>
+
+            <option th:each="utilisateur : ${utilisateurs}"
+                    th:value="${utilisateur.id}"
+                    th:text="${utilisateur.nom + ' ' + utilisateur.prenom
+                              + ' (' + utilisateur.email + ')'}">
+            </option>
+        </select>
+
+        <div class="actions">
+            <button type="submit" class="btn">Enregistrer</button>
+
+            <a th:href="@{/admin/vehicules}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

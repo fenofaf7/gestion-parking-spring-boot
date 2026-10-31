@@ -1,0 +1,105 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Mes réservations</title>
+
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/client.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/client-navbar :: navbar}"></div>
+
+<main class="container client-main">
+
+    <header class="client-page-header">
+        <div>
+            <h1>Mes réservations</h1>
+            <p>Retrouvez vos réservations de parking.</p>
+        </div>
+
+        <a class="btn btn-primary"
+           th:href="@{/client/reservations/ajouter}">
+            + Nouvelle réservation
+        </a>
+    </header>
+
+    <div th:if="${success}"
+         class="alert alert-success"
+         th:text="${success}"></div>
+
+    <div th:if="${error}"
+         class="alert alert-error"
+         th:text="${error}"></div>
+
+    <div class="card"
+         th:if="${#lists.isEmpty(reservations)}">
+        Aucune réservation pour le moment.
+    </div>
+
+    <section class="vehicle-grid"
+             th:unless="${#lists.isEmpty(reservations)}">
+
+        <article class="card vehicle-card"
+                 th:each="reservation : ${reservations}">
+
+            <div class="vehicle-card-header">
+                <h2>
+                    Réservation
+                    <span th:text="${'#' + reservation.id}"></span>
+                </h2>
+
+                <span class="badge"
+                      th:text="${reservation.statut}">
+                </span>
+            </div>
+
+            <p>
+                <strong>Véhicule :</strong>
+                <span th:text="${reservation.vehicule.immatriculation}">
+                </span>
+            </p>
+
+            <p>
+                <strong>Place :</strong>
+                <span th:text="${reservation.place.numero}"></span>
+            </p>
+
+            <p>
+                <strong>Début :</strong>
+                <span th:text="${#temporals.format(
+                    reservation.dateDebut, 'dd/MM/yyyy HH:mm')}">
+                </span>
+            </p>
+
+            <p>
+                <strong>Fin :</strong>
+                <span th:text="${#temporals.format(
+                    reservation.dateFin, 'dd/MM/yyyy HH:mm')}">
+                </span>
+            </p>
+
+            <form method="post"
+                  th:if="${(reservation.statut.name() == 'EN_ATTENTE'
+                            or reservation.statut.name() == 'CONFIRMEE')
+                            and reservation.dateDebut.isAfter(T(java.time.LocalDateTime).now())}"
+                  th:action="@{/client/reservations/{id}/annuler(
+                    id=${reservation.id})}">
+
+                <button type="submit"
+                        class="btn btn-outline"
+                        onclick="return confirm('Annuler cette réservation ?')">
+                    Annuler
+                </button>
+            </form>
+
+        </article>
+    </section>
+
+</main>
+</body>
+</html>

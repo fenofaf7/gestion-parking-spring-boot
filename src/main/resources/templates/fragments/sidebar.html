@@ -1,0 +1,74 @@
+
+<aside xmlns:th="http://www.thymeleaf.org"
+       th:fragment="sidebar"
+       class="sidebar">
+
+    <div class="sidebar-brand">
+        <span class="brand-icon">P</span>
+        <div>
+            <strong>Parking Manager</strong>
+            <small>Administration</small>
+        </div>
+    </div>
+
+    <nav class="sidebar-nav">
+
+        <p class="nav-label">PRINCIPAL</p>
+
+        <a th:href="@{/dashboard}"
+           th:classappend="${activePage == 'dashboard'} ? ' active' : ''">
+            Tableau de bord
+        </a>
+
+        <p class="nav-label">GESTION</p>
+        
+        <a th:href="@{/admin/finances}">
+		    Gestion financière
+		</a>
+
+        <a th:href="@{/admin/places}"
+		   th:classappend="${activePage == 'places'} ? ' active' : ''">
+		    Places
+		</a>
+		<a th:href="@{/admin/types-places}"
+		   th:classappend="${activePage == 'types-places'} ? ' active' : ''">
+		    Types de places
+		</a>
+        <a th:href="@{/admin/vehicules}"
+		   th:classappend="${activePage == 'vehicules'} ? ' active' : ''">
+		    Véhicules
+		</a>
+        <a th:href="@{/admin/reservations}"
+		   th:classappend="${activePage == 'reservations'} ? ' active' : ''">
+		    Réservations
+		</a>
+        <a th:href="@{/admin/stationnements}"
+		   th:classappend="${activePage == 'stationnements'} ? ' active' : ''">
+		    Stationnements
+		</a>
+        <a th:href="@{/admin/paiements}"
+		   th:classappend="${activePage == 'paiements'} ? ' active' : ''">
+		    Paiements
+		</a>
+
+        <p class="nav-label">ADMINISTRATION</p>
+
+        <a th:href="@{/admin/utilisateurs}"
+		   th:classappend="${activePage == 'utilisateurs'} ? ' active' : ''">
+		    Utilisateurs
+		</a>
+        <a th:href="@{/admin/tarifs}"
+		   th:classappend="${activePage == 'tarifs'} ? ' active' : ''">
+		    Tarifs
+		</a>
+        <a th:href="@{/admin/abonnements}"
+		   th:classappend="${activePage == 'abonnements'} ? ' active' : ''">
+		    Abonnements
+		</a>
+		
+		<a th:href="@{/admin/types-abonnement}">
+		    Gérer les formules d'abonnement
+		</a>
+    </nav>
+
+</aside>

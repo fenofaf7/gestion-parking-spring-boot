@@ -1,0 +1,201 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+    <title>Nouvelle réservation</title>
+
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/client.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/client-navbar :: navbar}"></div>
+
+<main class="container client-main">
+
+    <div class="form-container card">
+
+        <h1>Nouvelle réservation</h1>
+
+        <div th:if="${error}"
+             class="alert alert-error"
+             th:text="${error}">
+        </div>
+
+        <form method="get"
+              th:action="@{/client/reservations/ajouter}">
+
+            <div class="form-group">
+                <label for="debut">Date et heure de début</label>
+                <input type="datetime-local"
+                       id="debut"
+                       name="debut"
+                       required
+                       th:value="${debut}">
+            </div>
+
+            <div class="form-group">
+                <label for="fin">Date et heure de fin</label>
+                <input type="datetime-local"
+                       id="fin"
+                       name="fin"
+                       required
+                       th:value="${fin}">
+            </div>
+
+            <button type="submit" class="btn btn-outline">
+                Rechercher des places
+            </button>
+        </form>
+
+        <hr>
+
+        <div th:if="${debut != null and fin != null and error == null}">
+
+            <div th:if="${#lists.isEmpty(places)}">
+                <p>Aucune place disponible pour cette période.</p>
+            </div>
+
+            <form method="post"
+                  th:unless="${#lists.isEmpty(places)}"
+                  th:action="@{/client/reservations/ajouter}">
+
+                <div class="form-group">
+				    <label for="debut">Date et heure de début</label>
+				    <input type="datetime-local"
+				           id="debut"
+				           name="debut"
+				           required
+				           th:value="${debut}"
+				           onchange="verifierDates()">
+				</div>
+				
+				<div class="form-group">
+				    <label for="fin">Date et heure de fin</label>
+				    <input type="datetime-local"
+				           id="fin"
+				           name="fin"
+				           required
+				           th:value="${fin}"
+				           onchange="verifierDates()">
+				</div>
+				
+				<p id="dateErreur" class="alert alert-error"
+				   style="display:none;"></p>
+
+                <div class="form-group">
+                    <label for="vehiculeId">Mon véhicule</label>
+
+                    <select id="vehiculeId"
+                            name="vehiculeId"
+                            required>
+
+                        <option value="">Choisir un véhicule</option>
+
+                        <option th:each="v : ${vehicules}"
+                                th:value="${v.id}"
+                                th:text="${v.immatriculation
+                                    + ' - ' + (v.marque ?: '')}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="placeId">Place disponible</label>
+
+                    <select id="placeId"
+                            name="placeId"
+                            required>
+
+                        <option value="">Choisir une place</option>
+
+                        <option th:each="p : ${places}"
+                                th:value="${p.id}"
+                                th:text="${p.numero + ' - Zone ' + p.zone}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn btn-outline"
+                       th:href="@{/client/reservations}">
+                        Annuler
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        Confirmer ma demande
+                    </button>
+                </div>
+            </form>
+
+        </div>
+    </div>
+    
+    <script>
+		function verifierDates() {
+		    const debut = document.getElementById("debut");
+		    const fin = document.getElementById("fin");
+		    const erreur = document.getElementById("dateErreur");
+		
+		    const maintenant = new Date();
+		
+		    const debutDate = debut.value
+		        ? new Date(debut.value)
+		        : null;
+		
+		    const finDate = fin.value
+		        ? new Date(fin.value)
+		        : null;
+		
+		    let message = "";
+		
+		    if (debutDate && debutDate <= maintenant) {
+		        message = "La date de début doit être dans le futur.";
+		    } else if (debutDate && finDate && finDate <= debutDate) {
+		        message = "La date de fin doit être après la date de début.";
+		    }
+		
+		    debut.setCustomValidity(message);
+		    fin.setCustomValidity(message);
+		
+		    erreur.textContent = message;
+		    erreur.style.display = message ? "block" : "none";
+		
+		    return !message;
+		}
+		
+		document.addEventListener("DOMContentLoaded", function () {
+		    const debut = document.getElementById("debut");
+		    const fin = document.getElementById("fin");
+		
+		    debut.addEventListener("change", function () {
+		        if (!debut.value) return;
+		
+		        // La fin doit toujours être après le début.
+		        fin.min = debut.value;
+		
+		        // Si la fin est vide ou antérieure au début,
+		        // proposer automatiquement une heure plus tard.
+		        if (!fin.value || fin.value <= debut.value) {
+		            const dateFin = new Date(debut.value);
+		            dateFin.setHours(dateFin.getHours() + 1);
+		
+		            const pad = n => String(n).padStart(2, "0");
+		
+		            fin.value =
+		                dateFin.getFullYear() + "-" +
+		                pad(dateFin.getMonth() + 1) + "-" +
+		                pad(dateFin.getDate()) + "T" +
+		                pad(dateFin.getHours()) + ":" +
+		                pad(dateFin.getMinutes());
+		        }
+		    });
+		});
+	</script>
+
+</main>
+</body>
+</html>

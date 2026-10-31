@@ -1,0 +1,113 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Types d'abonnement</title>
+    <link rel="stylesheet"
+          th:href="@{/css/types-abonnement.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Gestion des types d'abonnement</h1>
+
+    <div class="actions">
+        <a th:href="@{/admin/dashboard}"
+           class="btn secondary">
+            Tableau de bord
+        </a>
+
+        <a th:href="@{/admin/types-abonnement/ajouter}"
+           class="btn">
+            + Nouvelle formule
+        </a>
+    </div>
+
+    <p class="success"
+       th:if="${success}"
+       th:text="${success}"></p>
+
+    <p class="error"
+       th:if="${error}"
+       th:text="${error}"></p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nom</th>
+                    <th>Description</th>
+                    <th>Durée</th>
+                    <th>Prix</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="type : ${typesAbonnement}">
+
+                    <td th:text="${type.id}"></td>
+
+                    <td th:text="${type.nom}"></td>
+
+                    <td th:text="${type.description}"></td>
+
+                    <td th:text="${type.duree + ' ' + type.uniteDuree}"></td>
+
+                    <td th:text="${type.prix + ' Ar'}"></td>
+
+                    <td>
+                        <span th:text="${type.actif ? 'Actif' : 'Inactif'}"
+                              th:class="${type.actif ? 'active' : 'inactive'}">
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="row-actions">
+
+                            <a class="btn small"
+                               th:href="@{/admin/types-abonnement/{id}/modifier(id=${type.id})}">
+                                Modifier
+                            </a>
+
+                            <form th:if="${type.actif}"
+                                  method="post"
+                                  th:action="@{/admin/types-abonnement/{id}/desactiver(id=${type.id})}">
+
+                                <button type="submit"
+                                        class="btn small danger">
+                                    Désactiver
+                                </button>
+                            </form>
+
+                            <form th:unless="${type.actif}"
+                                  method="post"
+                                  th:action="@{/admin/types-abonnement/{id}/reactiver(id=${type.id})}">
+
+                                <button type="submit"
+                                        class="btn small success-btn">
+                                    Réactiver
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(typesAbonnement)}">
+                    <td colspan="7">
+                        Aucune formule d'abonnement.
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>

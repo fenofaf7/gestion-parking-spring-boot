@@ -1,0 +1,213 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouvelle réservation</title>
+    <link rel="stylesheet" th:href="@{/css/reservations.css}">
+</head>
+<body>
+
+<div class="container form-container">
+
+    <h1>Nouvelle réservation</h1>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/admin/reservations/ajouter}" method="post">
+
+        
+		<label for="utilisateurId">Client</label>
+		
+		<select id="utilisateurId" name="utilisateurId" required>
+		    <option value="">-- Sélectionner un client --</option>
+		
+		    <option th:each="utilisateur : ${utilisateurs}"
+		            th:value="${utilisateur.id}"
+		            th:text="${utilisateur.nom + ' ' + utilisateur.prenom}">
+		    </option>
+		</select>
+
+
+        
+		<label for="vehiculeId">Véhicule</label>
+		
+		<select id="vehiculeId" name="vehiculeId" required disabled>
+		    <option value="">-- Sélectionner d'abord un client --</option>
+		
+		    <option th:each="vehicule : ${vehicules}"
+		            th:if="${vehicule.proprietaire != null}"
+		            th:value="${vehicule.id}"
+		            th:attr="data-proprietaire=${vehicule.proprietaire.id}"
+		            th:text="${vehicule.immatriculation + ' - '
+		                + vehicule.marque + ' ' + vehicule.modele}">
+		    </option>
+		</select>
+
+
+        
+		<label for="placeId">Place disponible</label>
+		
+		<select id="placeId" name="placeId" required disabled>
+		    <option value="">
+		        -- Sélectionner d'abord les dates --
+		    </option>
+		</select>
+		
+		<p id="messagePlaces"></p>
+
+
+        <label for="dateDebut">Date et heure de début</label>
+        <input type="datetime-local"
+               id="dateDebut"
+               name="dateDebut"
+               required>
+
+        <label for="dateFin">Date et heure de fin</label>
+        <input type="datetime-local"
+               id="dateFin"
+               name="dateFin"
+               required>
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Enregistrer la réservation
+            </button>
+
+            <a th:href="@{/admin/reservations}" class="btn btn-secondary">
+                Annuler
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+	<script>
+	document.addEventListener("DOMContentLoaded", function () {
+	
+	    const clientSelect = document.getElementById("utilisateurId");
+	    const vehiculeSelect = document.getElementById("vehiculeId");
+	
+	    const vehicules = Array.from(
+	        vehiculeSelect.querySelectorAll("option[data-proprietaire]")
+	    );
+	
+	    clientSelect.addEventListener("change", function () {
+	
+	        const clientId = clientSelect.value;
+	
+	        vehiculeSelect.innerHTML = "";
+	
+	        const optionDefaut = document.createElement("option");
+	        optionDefaut.value = "";
+	        optionDefaut.textContent = "-- Sélectionner un véhicule --";
+	
+	        vehiculeSelect.appendChild(optionDefaut);
+	
+	        vehiculeSelect.disabled = !clientId;
+	
+	        if (!clientId) {
+	            optionDefaut.textContent = "-- Sélectionner d'abord un client --";
+	            return;
+	        }
+	
+	        const vehiculesClient = vehicules.filter(
+	            vehicule => vehicule.dataset.proprietaire === clientId
+	        );
+	
+	        vehiculesClient.forEach(function (vehicule) {
+	            vehiculeSelect.appendChild(vehicule);
+	        });
+	
+	        if (vehiculesClient.length === 0) {
+	            optionDefaut.textContent =
+	                "-- Aucun véhicule pour ce client --";
+	        }
+	    });
+	
+	});
+	
+
+	document.addEventListener("DOMContentLoaded", function () {
+
+	    const debutInput = document.getElementById("dateDebut");
+	    const finInput = document.getElementById("dateFin");
+	    const placeSelect = document.getElementById("placeId");
+	    const message = document.getElementById("messagePlaces");
+
+	    let numeroRequete = 0;
+
+	    async function chargerPlaces() {
+
+	        const requeteCourante = ++numeroRequete;
+
+	        placeSelect.innerHTML =
+	            '<option value="">-- Sélectionner une place --</option>';
+
+	        placeSelect.disabled = true;
+	        message.textContent = "";
+
+	        const debut = debutInput.value;
+	        const fin = finInput.value;
+
+	        if (!debut || !fin) {
+	            message.textContent = "Veuillez renseigner les deux dates.";
+	            return;
+	        }
+
+	        if (new Date(debut) >= new Date(fin)) {
+	            message.textContent = "La date de fin doit être après le début.";
+	            return;
+	        }
+
+	        try {
+	            const params = new URLSearchParams({ debut, fin });
+
+	            const response = await fetch(
+	                "/admin/reservations/places-disponibles?" + params
+	            );
+
+	            if (!response.ok) {
+	                throw new Error("Impossible de vérifier les disponibilités.");
+	            }
+
+	            const places = await response.json();
+
+	            if (requeteCourante !== numeroRequete) return;
+
+	            if (places.length === 0) {
+	                message.textContent =
+	                    "Aucune place disponible pour cette période.";
+	                return;
+	            }
+
+	            places.forEach(function (place) {
+	                const option = document.createElement("option");
+	                option.value = place.id;
+	                option.textContent =
+	                    place.numero + " - Zone " + place.zone;
+
+	                placeSelect.appendChild(option);
+	            });
+
+	            placeSelect.disabled = false;
+	            message.textContent =
+	                places.length + " place(s) disponible(s).";
+
+	        } catch (erreur) {
+	            if (requeteCourante !== numeroRequete) return;
+	            message.textContent = erreur.message;
+	        }
+	    }
+
+	    debutInput.addEventListener("change", chargerPlaces);
+	    finInput.addEventListener("change", chargerPlaces);
+
+	});
+
+	</script>
+
+
+</body>
+</html>

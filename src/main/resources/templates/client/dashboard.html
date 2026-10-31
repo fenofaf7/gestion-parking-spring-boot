@@ -1,0 +1,127 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Espace client - Parking</title>
+
+    <link rel="stylesheet"
+          th:href="@{/css/components.css}">
+
+    <link rel="stylesheet"
+          th:href="@{/css/client.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/client-navbar :: navbar}"></div>
+
+<main class="container client-main">
+
+    <header class="client-header">
+        <h1>
+            Bonjour,
+            <span th:text="${client.prenom}">Client</span> !
+        </h1>
+
+        <p>
+            Bienvenue dans votre espace personnel.
+        </p>
+    </header>
+
+    <section class="client-grid">
+    
+    	
+
+        
+		<div class="card">
+		    <span class="stat-label">Mes véhicules</span>
+		
+		    <strong class="stat-value"
+		            th:text="${nombreVehicules}">
+		        0
+		    </strong>
+		</div>
+		
+		<div class="card">
+		    <span class="stat-label">Mes réservations</span>
+		
+		    <strong class="stat-value"
+		            th:text="${nombreReservations}">
+		        0
+		    </strong>
+		</div>
+
+
+        <div class="card">
+		    <span class="stat-label">Mes abonnements</span>
+		
+		    <strong class="stat-value"
+		            th:text="${nombreAbonnements}">
+		        0
+		    </strong>
+		</div>
+		
+		<div class="card">
+		    <span class="stat-label">Mes paiements confirmés</span>
+		
+		    <strong class="stat-value"
+		            th:text="${nombrePaiements}">
+		        0
+		    </strong>
+		</div>
+
+    </section>
+
+    <section class="card">
+        <h2 class="card-title">Mon profil</h2>
+
+        <p>
+            <strong>Nom :</strong>
+            <span th:text="${client.prenom + ' ' + client.nom}">
+            </span>
+        </p>
+
+        <p>
+            <strong>Email :</strong>
+            <span th:text="${client.email}"></span>
+        </p>
+
+        <p>
+            <strong>Catégorie :</strong>
+            <span class="badge"
+                  th:text="${client.categorie != null
+                    ? client.categorie.nom
+                    : 'Non définie'}">
+            </span>
+        </p>
+    </section>
+
+    <section class="card" style="margin-top: 20px;">
+        <h2 class="card-title">Mes services</h2>
+
+        <div class="client-actions">
+            <span class="btn btn-outline">
+                Mes véhicules
+            </span>
+
+            <span class="btn btn-outline">
+                Mes réservations
+            </span>
+
+            <span class="btn btn-outline">
+                Mes abonnements
+            </span>
+
+            <span class="btn btn-outline">
+                Mes paiements
+            </span>
+        </div>
+    </section>
+
+</main>
+
+</body>
+</html>

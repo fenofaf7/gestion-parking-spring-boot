@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des tarifs</title>
+    <link rel="stylesheet" th:href="@{/css/tarifs.css}">
+</head>
+<body>
+<div class="container">
+
+    <h1>Gestion des tarifs</h1>
+
+    <div class="actions">
+        <a th:href="@{/admin/dashboard}" class="btn secondary">
+            Tableau de bord
+        </a>
+        <a th:href="@{/admin/tarifs/ajouter}" class="btn">
+            + Ajouter un tarif
+        </a>
+    </div>
+
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Type de place</th>
+                <th>Catégorie</th>
+                <th>Prix horaire</th>
+                <th>Prix journalier</th>
+                <th>Horaires</th>
+                <th>Statut</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="tarif : ${tarifs}">
+                <td th:text="${tarif.id}"></td>
+                <td th:text="${tarif.typePlace.nom}"></td>
+                <td th:text="${tarif.categorieClient != null
+                    ? tarif.categorieClient.nom : 'Général'}"></td>
+                <td th:text="${tarif.prixHoraire + ' Ar'}"></td>
+                <td th:text="${tarif.prixJournalier != null
+                    ? tarif.prixJournalier + ' Ar' : '-'}"></td>
+                <td th:text="${tarif.heureDebut != null
+                    ? tarif.heureDebut + ' - ' + tarif.heureFin
+                    : 'Toute la journée'}"></td>
+                <td>
+                    <span th:text="${tarif.actif ? 'Actif' : 'Inactif'}"
+                          th:class="${tarif.actif ? 'active' : 'inactive'}">
+                    </span>
+                </td>
+                <td>
+                    <div class="row-actions">
+                        <a class="btn small"
+                           th:href="@{/admin/tarifs/{id}/modifier(id=${tarif.id})}">
+                            Modifier
+                        </a>
+
+                        <form method="post"
+                              th:action="@{/admin/tarifs/{id}/statut(id=${tarif.id})}">
+                            <button class="btn small secondary"
+                                    type="submit"
+                                    th:text="${tarif.actif ? 'Désactiver' : 'Activer'}">
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(tarifs)}">
+                <td colspan="8">Aucun tarif enregistré.</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</body>
+</html>

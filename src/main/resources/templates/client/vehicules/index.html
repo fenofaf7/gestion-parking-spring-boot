@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Mes véhicules</title>
+
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/client.css}">
+</head>
+<body>
+
+<div th:replace="~{fragments/client-navbar :: navbar}"></div>
+
+<main class="container client-main">
+
+    <header class="client-page-header">
+        <div>
+            <h1>Mes véhicules</h1>
+            <p>Consultez et gérez vos véhicules enregistrés.</p>
+        </div>
+
+        <a th:href="@{/client/vehicules/ajouter}"
+           class="btn btn-primary">
+            + Ajouter un véhicule
+        </a>
+    </header>
+
+    <div th:if="${success}" class="alert alert-success"
+         th:text="${success}">
+    </div>
+
+    <div th:if="${#lists.isEmpty(vehicules)}" class="card">
+        <p>Vous n'avez pas encore enregistré de véhicule.</p>
+    </div>
+
+    <section class="vehicle-grid"
+             th:unless="${#lists.isEmpty(vehicules)}">
+
+        <article class="card vehicle-card"
+                 th:each="vehicule : ${vehicules}">
+
+            <div class="vehicle-card-header">
+                <h2 th:text="${vehicule.immatriculation}">
+                    1234 TAA
+                </h2>
+
+                <span class="badge">Véhicule</span>
+            </div>
+
+            <p>
+                <strong>Marque :</strong>
+                <span th:text="${vehicule.marque ?: 'Non renseignée'}">
+                </span>
+            </p>
+
+            <p>
+                <strong>Modèle :</strong>
+                <span th:text="${vehicule.modele ?: 'Non renseigné'}">
+                </span>
+            </p>
+
+            <p>
+                <strong>Couleur :</strong>
+                <span th:text="${vehicule.couleur ?: 'Non renseignée'}">
+                </span>
+            </p>
+
+            <a class="btn btn-outline"
+               th:href="@{/client/vehicules/{id}/modifier(id=${vehicule.id})}">
+                Modifier
+            </a>
+        </article>
+
+    </section>
+
+</main>
+</body>
+</html>

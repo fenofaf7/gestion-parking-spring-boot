@@ -1,0 +1,96 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Enregistrer une entrée</title>
+    <link rel="stylesheet" th:href="@{/css/stationnements.css}">
+</head>
+<body>
+
+<div class="container form-container">
+
+    <h1>Enregistrer une entrée</h1>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/admin/stationnements/ajouter}" method="post">
+
+        <label for="reservationId">Réservation (facultative)</label>
+
+        <select id="reservationId" name="reservationId">
+            <option value="">-- Sans réservation --</option>
+
+            <option th:each="reservation : ${reservations}"
+                    th:value="${reservation.id}"
+                    th:attr="data-vehicule=${reservation.vehicule.id},
+                             data-place=${reservation.place.id}"
+                    th:text="${'Réservation #' + reservation.id
+                        + ' - ' + reservation.vehicule.immatriculation
+                        + ' - Place ' + reservation.place.numero}">
+            </option>
+        </select>
+
+        <label for="vehiculeId">Véhicule</label>
+
+        <select id="vehiculeId" name="vehiculeId" required>
+            <option value="">-- Sélectionner un véhicule --</option>
+
+            <option th:each="vehicule : ${vehicules}"
+                    th:value="${vehicule.id}"
+                    th:text="${vehicule.immatriculation
+                        + ' - ' + vehicule.marque}">
+            </option>
+        </select>
+
+        <label for="placeId">Place</label>
+
+        <select id="placeId" name="placeId" required>
+            <option value="">-- Sélectionner une place --</option>
+
+            <option th:each="place : ${places}"
+                    th:value="${place.id}"
+                    th:text="${place.numero + ' - Zone ' + place.zone}">
+            </option>
+        </select>
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Enregistrer l'entrée
+            </button>
+
+            <a th:href="@{/admin/stationnements}" class="btn btn-secondary">
+                Retour
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const reservationSelect = document.getElementById("reservationId");
+    const vehiculeSelect = document.getElementById("vehiculeId");
+    const placeSelect = document.getElementById("placeId");
+
+    reservationSelect.addEventListener("change", function () {
+
+        const option = reservationSelect.selectedOptions[0];
+
+        if (!option || !option.value) {
+            vehiculeSelect.value = "";
+            placeSelect.value = "";
+            return;
+        }
+
+        vehiculeSelect.value = option.dataset.vehicule;
+        placeSelect.value = option.dataset.place;
+    });
+
+});
+</script>
+
+</body>
+</html>

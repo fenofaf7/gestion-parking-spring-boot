@@ -1,0 +1,11 @@
+ALTER TABLE places
+ADD COLUMN zone VARCHAR(30);
+
+UPDATE places
+SET zone = 'A';
+
+ALTER TABLE places
+ALTER COLUMN zone SET NOT NULL;
+
+ALTER TABLE places
+DROP COLUMN etage;

@@ -1,0 +1,74 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire tarif</title>
+    <link rel="stylesheet" th:href="@{/css/tarifs.css}">
+</head>
+<body>
+<div class="container form-container">
+
+    <h1 th:text="${tarif != null ? 'Modifier un tarif' : 'Ajouter un tarif'}">
+        Ajouter un tarif
+    </h1>
+
+    <form th:action="@{/admin/tarifs/enregistrer}" method="post">
+
+        <input type="hidden" name="id"
+               th:if="${tarif != null}"
+               th:value="${tarif.id}">
+
+        <label>Type de place</label>
+        <select name="typePlaceId" required>
+            <option value="">-- Sélectionner --</option>
+            <option th:each="type : ${typesPlace}"
+                    th:value="${type.id}"
+                    th:text="${type.nom}"
+                    th:selected="${tarif != null
+                        and tarif.typePlace.id == type.id}">
+            </option>
+        </select>
+
+        <label>Catégorie client</label>
+        <select name="categorieId">
+            <option value="">Tarif général</option>
+            <option th:each="categorie : ${categories}"
+                    th:value="${categorie.id}"
+                    th:text="${categorie.nom}"
+                    th:selected="${tarif != null
+                        and tarif.categorieClient != null
+                        and tarif.categorieClient.id == categorie.id}">
+            </option>
+        </select>
+
+        <label>Prix horaire (Ar)</label>
+        <input type="number" name="prixHoraire"
+               min="0" step="0.01" required
+               th:value="${tarif != null ? tarif.prixHoraire : ''}">
+
+        <label>Prix journalier (Ar) — facultatif</label>
+        <input type="number" name="prixJournalier"
+               min="0" step="0.01"
+               th:value="${tarif != null ? tarif.prixJournalier : ''}">
+
+        <label>Heure de début — facultative</label>
+        <input type="time" name="heureDebut"
+               th:value="${tarif != null ? tarif.heureDebut : ''}">
+
+        <label>Heure de fin — facultative</label>
+        <input type="time" name="heureFin"
+               th:value="${tarif != null ? tarif.heureFin : ''}">
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Enregistrer
+            </button>
+            <a th:href="@{/admin/tarifs}" class="btn secondary">
+                Annuler
+            </a>
+        </div>
+    </form>
+</div>
+</body>
+</html>

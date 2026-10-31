@@ -1,0 +1,29 @@
+
+<header xmlns:th="http://www.thymeleaf.org"
+        th:fragment="header"
+        class="topbar">
+
+    <div class="topbar-left">
+        <button id="sidebarToggle"
+                class="icon-button"
+                type="button"
+                aria-label="Afficher ou masquer le menu">
+            ☰
+        </button>
+
+        <h2 th:text="${pageTitle}">
+            Tableau de bord
+        </h2>
+    </div>
+
+    <div class="topbar-right">
+		<form th:action="@{/logout}" method="post">
+		    <button type="submit" class="icon-button">
+		        Déconnexion
+		    </button>
+		</form>
+        <span class="status-dot"></span>
+        <span>Système de parking</span>
+    </div>
+
+</header>

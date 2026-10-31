@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion financière</title>
+    <link rel="stylesheet"
+          th:href="@{/css/finances.css}">
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Gestion financière du parking</h1>
+
+    <div class="stats">
+
+        <div class="card">
+            <h3>Recettes encaissées</h3>
+            <h2 th:text="${recettes} + ' Ar'">0 Ar</h2>
+        </div>
+
+        <div class="card">
+            <h3>Montant en attente</h3>
+            <h2 th:text="${montantEnAttente} + ' Ar'">
+                0 Ar
+            </h2>
+        </div>
+
+        <div class="card">
+            <h3>Paiements confirmés</h3>
+            <h2 th:text="${paiementsConfirmes}">0</h2>
+        </div>
+
+        <div class="card">
+            <h3>Paiements échoués</h3>
+            <h2 th:text="${paiementsEchoues}">0</h2>
+        </div>
+
+    </div>
+
+    <h2>Historique des paiements</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Référence</th>
+            <th>Stationnement</th>
+            <th>Montant</th>
+            <th>Mode</th>
+            <th>Statut</th>
+            <th>Date de paiement</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr th:each="paiement : ${paiements}">
+
+            <td th:text="${paiement.reference}"></td>
+
+            <td th:text="${paiement.stationnement.id}"></td>
+
+            <td th:text="${paiement.montant} + ' Ar'"></td>
+
+            <td th:text="${paiement.modePaiement}"></td>
+
+            <td th:text="${paiement.statut}"></td>
+
+            <td th:text="${paiement.datePaiement != null
+                ? #temporals.format(
+                    paiement.datePaiement,
+                    'dd/MM/yyyy HH:mm')
+                : '-'}"></td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/admin/dashboard}">
+        Retour au dashboard
+    </a>
+
+</div>
+
+</body>
+</html>

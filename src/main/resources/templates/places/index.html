@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Gestion des places</title>
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar}" />
+
+    <div class="main-wrapper">
+
+        <th:block th:replace="~{fragments/header :: header}" />
+
+        <main class="main-content">
+
+            <div class="page-toolbar">
+
+                <div>
+                    <h1>Gestion des places</h1>
+                    <p class="muted">
+                        Liste des places du parking
+                    </p>
+                </div>
+
+                <a th:href="@{/admin/places/ajouter}"
+                   class="btn btn-primary">
+                    + Ajouter une place
+                </a>
+
+            </div>
+
+            <div th:if="${success}"
+                 class="alert alert-success"
+                 th:text="${success}">
+            </div>
+
+            <div th:if="${error}"
+                 class="alert alert-error"
+                 th:text="${error}">
+            </div>
+
+            <div class="table-container">
+
+                <table class="data-table">
+
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Numéro</th>
+                            <th>Zone</th>
+                            <th>Type</th>
+                            <th>Statut</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="place : ${places}">
+
+                            <td th:text="${place.id}"></td>
+
+                            <td th:text="${place.numero}"></td>
+
+                            <td th:text="${place.zone}"></td>
+
+                            <td th:text="${place.type.nom}"></td>
+
+                            <td>
+                                <span class="badge-status"
+                                      th:classappend="${
+                                        place.statut.name() == 'LIBRE'
+                                        ? ' status-libre'
+                                        : (place.statut.name() == 'OCCUPEE'
+                                        ? ' status-occupee'
+                                        : (place.statut.name() == 'MAINTENANCE'
+                                        ? ' status-maintenance'
+                                        : ' status-default'))
+                                      }"
+                                      th:text="${place.statut}">
+                                </span>
+                            </td>
+
+                            <td>
+                                <div class="table-actions">
+
+                                    <form th:if="${place.statut.name() == 'LIBRE'}"
+                                          th:action="@{/admin/places/{id}/maintenance(id=${place.id})}"
+                                          method="post">
+
+                                        <button class="btn btn-warning"
+                                                type="submit">
+                                            Maintenance
+                                        </button>
+
+                                    </form>
+
+                                    <form th:if="${place.statut.name() == 'MAINTENANCE'}"
+                                          th:action="@{/admin/places/{id}/service(id=${place.id})}"
+                                          method="post">
+
+                                        <button class="btn btn-secondary"
+                                                type="submit">
+                                            Remettre en service
+                                        </button>
+
+                                    </form>
+
+									 <span th:if="${place.statut.name() == 'OCCUPEE'}">
+								        Place occupée
+								    </span>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(places)}">
+                            <td colspan="6"
+                                style="text-align:center;padding:30px;">
+                                Aucune place enregistrée.
+                            </td>
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

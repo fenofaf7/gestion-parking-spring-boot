@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des véhicules</title>
+    <link rel="stylesheet" th:href="@{/css/vehicules.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Gestion des véhicules</h1>
+
+    <div class="actions">
+        <a th:href="@{/admin/dashboard}" class="btn btn-secondary">
+            Tableau de bord
+        </a>
+
+        <a th:href="@{/admin/vehicules/ajouter}" class="btn">
+            + Ajouter un véhicule
+        </a>
+    </div>
+
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Immatriculation</th>
+                <th>Marque</th>
+                <th>Modèle</th>
+                <th>Couleur</th>
+                <th>Propriétaire</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr th:each="vehicule : ${vehicules}">
+                <td th:text="${vehicule.id}"></td>
+                <td th:text="${vehicule.immatriculation}"></td>
+                <td th:text="${vehicule.marque}"></td>
+                <td th:text="${vehicule.modele}"></td>
+                <td th:text="${vehicule.couleur}"></td>
+
+                <td th:text="${vehicule.proprietaire != null
+                    ? vehicule.proprietaire.nom + ' ' + vehicule.proprietaire.prenom
+                    : 'Non renseigné'}">
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(vehicules)}">
+                <td colspan="6">Aucun véhicule enregistré.</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+
+</body>
+</html>

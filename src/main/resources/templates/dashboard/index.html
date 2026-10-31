@@ -1,0 +1,140 @@
+
+<!DOCTYPE html>
+<html lang="fr"
+      xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title th:text="${pageTitle} + ' | Parking Manager'">
+        Tableau de bord
+    </title>
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/dashboard.css}">
+</head>
+
+<body>
+
+<div class="app-layout">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar}" />
+
+    <div class="main-wrapper">
+
+        <th:block th:replace="~{fragments/header :: header}" />
+
+        <main class="main-content">
+
+            <div class="page-heading">
+                <div>
+                    <h1>Tableau de bord</h1>
+                    <p>
+                        Vue d'ensemble de votre parking
+                    </p>
+                </div>
+            </div>
+
+            <section class="stats-grid">
+
+                <article class="stat-card">
+                    <span class="stat-label">Total des places</span>
+                    <strong th:text="${totalPlaces}">0</strong>
+                    <small>Capacité du parking</small>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-label">Places libres</span>
+                    <strong th:text="${placesLibres}">0</strong>
+                    <small>Disponibles actuellement</small>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-label">Places occupées</span>
+                    <strong th:text="${placesOccupees}">0</strong>
+                    <small>Places utilisées</small>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-label">Véhicules enregistrés</span>
+                    <strong th:text="${totalVehicules}">0</strong>
+                    <small>Dans la base de données</small>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-label">Réservations</span>
+                    <strong th:text="${totalReservations}">0</strong>
+                    <small>Total enregistré</small>
+                </article>
+
+                <article class="stat-card">
+                    <span class="stat-label">Stationnements actifs</span>
+                    <strong th:text="${stationnementsEnCours}">0</strong>
+                    <small>Actuellement en cours</small>
+                </article>
+
+            </section>
+
+            <section class="dashboard-grid">
+
+                <article class="panel">
+
+                    <h2>Taux d'occupation</h2>
+
+                    <div class="occupation-value">
+                        <span th:text="${tauxOccupation} + '%'">
+                            0%
+                        </span>
+                    </div>
+
+                    <div class="progress-track">
+                        <div class="progress-fill"
+                             th:style="'width: ' + ${tauxOccupation} + '%'">
+                        </div>
+                    </div>
+
+                    <p class="muted">
+                        Pourcentage de places actuellement occupées.
+                    </p>
+
+                </article>
+
+                <article class="panel">
+
+                    <h2>Résumé du parking</h2>
+
+                    <div class="summary-row">
+                        <span>Places disponibles</span>
+                        <strong th:text="${placesLibres}">0</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Places occupées</span>
+                        <strong th:text="${placesOccupees}">0</strong>
+                    </div>
+
+                    <div class="summary-row">
+                        <span>Stationnements en cours</span>
+                        <strong th:text="${stationnementsEnCours}">0</strong>
+                    </div>
+
+                </article>
+
+            </section>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: footer}" />
+
+    </div>
+
+</div>
+
+<script th:src="@{/js/app.js}"></script>
+
+</body>
+</html>

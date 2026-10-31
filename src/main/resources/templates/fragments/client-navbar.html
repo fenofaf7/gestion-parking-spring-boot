@@ -1,0 +1,27 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="fr">
+<body>
+
+<nav th:fragment="navbar" class="client-navbar">
+    <a th:href="@{/client/dashboard}"
+       class="client-brand">
+        PARKING
+    </a>
+
+    <div class="client-nav-links">
+        <a th:href="@{/client/dashboard}">Accueil</a>
+        <a th:href="@{/client/vehicules}">Véhicules</a>
+        <a th:href="@{/client/reservations}">Réservations</a>
+        <a href="#" aria-disabled="true">Abonnements</a>
+    </div>
+
+    <form th:action="@{/logout}" method="post">
+        <button type="submit" class="btn btn-outline">
+            Déconnexion
+        </button>
+    </form>
+</nav>
+
+</body>
+</html>

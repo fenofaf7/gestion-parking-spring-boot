@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${pageTitle}">Type de place</title>
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+    <link rel="stylesheet" th:href="@{/css/form.css}">
+</head>
+<body>
+<div class="app-layout">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar}"/>
+
+    <div class="main-wrapper">
+        <th:block th:replace="~{fragments/header :: header}"/>
+
+        <main class="main-content">
+
+            <h1 th:text="${type != null ? 'Modifier un type' : 'Ajouter un type'}">
+                Type de place
+            </h1>
+
+            <div th:if="${error}"
+                 class="alert alert-error"
+                 th:text="${error}"></div>
+
+            <div class="form-card">
+
+                <form method="post"
+                      th:action="${type != null}
+                          ? @{/admin/types-places/{id}/modifier(id=${type.id})}
+                          : @{/admin/types-places/ajouter}">
+
+                    <div class="form-field">
+                        <label for="nom">Nom du type</label>
+                        <input id="nom" type="text" name="nom"
+                               th:value="${type != null ? type.nom : ''}"
+                               placeholder="Ex : VOITURE"
+                               required>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="description">Description</label>
+                        <textarea id="description"
+                                  name="description"
+                                  rows="3"
+                                  th:text="${type != null ? type.description : ''}">
+                        </textarea>
+                    </div>
+
+                    <div class="form-field">
+                        <label for="tarifHoraireBase">Tarif horaire de base (Ar)</label>
+                        <input id="tarifHoraireBase"
+                               type="number"
+                               name="tarifHoraireBase"
+                               min="0"
+                               step="0.01"
+                               th:value="${type != null ? type.tarifHoraireBase : ''}"
+                               required>
+                    </div>
+
+                    <div class="form-field">
+                        <label>
+                            <input type="checkbox"
+                                   name="reserveeVIP"
+                                   value="true"
+                                   th:checked="${type != null and type.reserveeVIP}">
+                            Réservée VIP
+                        </label>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">
+                            Enregistrer
+                        </button>
+
+                        <a class="btn btn-secondary"
+                           th:href="@{/admin/types-places}">
+                            Annuler
+                        </a>
+                    </div>
+                </form>
+
+            </div>
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: footer}"/>
+    </div>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

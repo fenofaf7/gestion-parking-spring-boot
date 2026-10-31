@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouvel abonnement</title>
+    <link rel="stylesheet" th:href="@{/css/abonnements.css}">
+</head>
+<body>
+
+<div class="container form-container">
+
+    <h1>Souscrire un abonnement</h1>
+
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <form th:action="@{/admin/abonnements/ajouter}" method="post">
+
+        <label for="utilisateurId">Client</label>
+
+        <select id="utilisateurId"
+                name="utilisateurId"
+                required>
+
+            <option value="">-- Sélectionner un client --</option>
+
+            <option th:each="utilisateur : ${utilisateurs}"
+                    th:if="${utilisateur.actif}"
+                    th:value="${utilisateur.id}"
+                    th:text="${utilisateur.nom + ' ' + utilisateur.prenom}">
+            </option>
+        </select>
+
+        <label for="typeAbonnementId">Formule d'abonnement</label>
+
+		<select id="typeAbonnementId"
+		        name="typeAbonnementId"
+		        required>
+		
+		    <option value="">-- Choisir une formule --</option>
+		
+		    <option th:each="type : ${typesAbonnement}"
+		            th:value="${type.id}"
+		            th:text="${type.nom + ' - ' + type.duree
+		                      + ' ' + type.uniteDuree
+		                      + ' - ' + type.prix + ' Ar'}">
+		    </option>
+		
+		</select>
+        
+        <label for="placeId">Place attribuée</label>
+
+		<select id="placeId" name="placeId" required>
+		    <option value="">-- Choisir une place --</option>
+		
+		    <option th:each="place : ${places}"
+		            th:value="${place.id}"
+		            th:text="${place.numero + ' - Zone ' + place.zone}">
+		    </option>
+		</select>
+
+        <p class="info">
+            La date de début, la date de fin et le prix
+            sont déterminés automatiquement par la formule.
+        </p>
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Enregistrer l'abonnement
+            </button>
+
+            <a th:href="@{/admin/abonnements}" class="btn secondary">
+                Retour
+            </a>
+        </div>
+
+    </form>
+
+</div>
+</body>
+</html>

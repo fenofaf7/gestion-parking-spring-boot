@@ -1,0 +1,43 @@
+
+:root {
+    --primary: #2563eb;
+    --primary-light: #eff6ff;
+    --background: #f5f7fb;
+    --surface: #ffffff;
+    --text: #172033;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --sidebar: #111827;
+    --success: #16a34a;
+    --radius: 12px;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: Arial, Helvetica, sans-serif;
+    background: var(--background);
+    color: var(--text);
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+button {
+    font: inherit;
+    cursor: pointer;
+}
+
+h1, h2, h3, p {
+    margin-top: 0;
+}
+
+.muted {
+    color: var(--muted);
+    font-size: 14px;
+}

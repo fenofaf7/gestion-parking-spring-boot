@@ -1,0 +1,89 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Types de places</title>
+
+    <link rel="stylesheet" th:href="@{/css/base.css}">
+    <link rel="stylesheet" th:href="@{/css/layout.css}">
+    <link rel="stylesheet" th:href="@{/css/components.css}">
+    <link rel="stylesheet" th:href="@{/css/table.css}">
+</head>
+<body>
+<div class="app-layout">
+
+    <th:block th:replace="~{fragments/sidebar :: sidebar}"/>
+
+    <div class="main-wrapper">
+        <th:block th:replace="~{fragments/header :: header}"/>
+
+        <main class="main-content">
+
+            <div class="page-toolbar">
+                <div>
+                    <h1>Types de places</h1>
+                    <p>Gestion des catégories d'emplacements.</p>
+                </div>
+
+                <a class="btn btn-primary"
+                   th:href="@{/admin/types-places/ajouter}">
+                    + Ajouter un type
+                </a>
+            </div>
+
+            <div th:if="${success}"
+                 class="alert alert-success"
+                 th:text="${success}"></div>
+
+            <div class="table-container">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nom</th>
+                            <th>Description</th>
+                            <th>Tarif horaire</th>
+                            <th>VIP</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <tr th:each="type : ${types}">
+                            <td th:text="${type.id}"></td>
+                            <td th:text="${type.nom}"></td>
+                            <td th:text="${type.description}"></td>
+
+                            <td th:text="|${type.tarifHoraireBase} Ar|"></td>
+
+                            <td>
+                                <span th:text="${type.reserveeVIP ? 'Oui' : 'Non'}"></span>
+                            </td>
+
+                            <td>
+                                <a class="btn btn-secondary"
+                                   th:href="@{/admin/types-places/{id}/modifier(id=${type.id})}">
+                                    Modifier
+                                </a>
+                            </td>
+                        </tr>
+
+                        <tr th:if="${#lists.isEmpty(types)}">
+                            <td colspan="6" style="text-align:center;padding:24px;">
+                                Aucun type de place enregistré.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </main>
+
+        <th:block th:replace="~{fragments/footer :: footer}"/>
+    </div>
+</div>
+<script th:src="@{/js/app.js}"></script>
+</body>
+</html>

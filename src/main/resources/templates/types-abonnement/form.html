@@ -1,0 +1,95 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Formulaire type d'abonnement</title>
+    <link rel="stylesheet"
+          th:href="@{/css/types-abonnement.css}">
+</head>
+<body>
+
+<div class="container form-container">
+
+    <h1 th:text="${type != null
+        ? 'Modifier une formule'
+        : 'Ajouter une formule'}">
+        Ajouter une formule
+    </h1>
+
+    <form th:action="@{/admin/types-abonnement/enregistrer}"
+          method="post">
+
+        <input type="hidden"
+               name="id"
+               th:if="${type != null}"
+               th:value="${type.id}">
+
+        <label for="nom">Nom de la formule</label>
+
+        <input type="text"
+               id="nom"
+               name="nom"
+               required
+               th:readonly="${type != null}"
+               th:value="${type != null ? type.nom : ''}"
+               placeholder="Ex : MENSUEL">
+
+        <label for="description">Description</label>
+
+        <textarea id="description"
+                  name="description"
+                  rows="4"
+                  th:text="${type != null ? type.description : ''}">
+        </textarea>
+
+        <label for="duree">Durée</label>
+
+        <input type="number"
+               id="duree"
+               name="duree"
+               min="1"
+               required
+               th:value="${type != null ? type.duree : 1}">
+
+        <label for="uniteDuree">Unité de durée</label>
+
+        <select id="uniteDuree"
+                name="uniteDuree"
+                required>
+
+            <option th:each="unite : ${unites}"
+                    th:value="${unite.name()}"
+                    th:text="${unite.name()}"
+                    th:selected="${type != null
+                        and type.uniteDuree == unite}">
+            </option>
+        </select>
+
+        <label for="prix">Prix (Ar)</label>
+
+        <input type="number"
+               id="prix"
+               name="prix"
+               min="0"
+               step="0.01"
+               required
+               th:value="${type != null ? type.prix : ''}">
+
+        <div class="actions">
+            <button type="submit" class="btn">
+                Enregistrer
+            </button>
+
+            <a th:href="@{/admin/types-abonnement}"
+               class="btn secondary">
+                Annuler
+            </a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

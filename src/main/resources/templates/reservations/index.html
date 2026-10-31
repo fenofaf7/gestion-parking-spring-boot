@@ -1,0 +1,103 @@
+
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Gestion des réservations</title>
+    <link rel="stylesheet" th:href="@{/css/reservations.css}">
+</head>
+<body>
+
+<div class="container">
+
+    <h1>Gestion des réservations</h1>
+
+    <div class="actions">
+        <a th:href="@{/admin/dashboard}" class="btn btn-secondary">
+            Tableau de bord
+        </a>
+
+        <a th:href="@{/admin/reservations/ajouter}" class="btn">
+            + Nouvelle réservation
+        </a>
+    </div>
+
+    <p class="success" th:if="${success}" th:text="${success}"></p>
+    <p class="error" th:if="${error}" th:text="${error}"></p>
+
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Client</th>
+                    <th>Véhicule</th>
+                    <th>Place</th>
+                    <th>Début</th>
+                    <th>Fin</th>
+                    <th>Statut</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr th:each="reservation : ${reservations}">
+
+                    <td th:text="${reservation.id}"></td>
+
+                    <td th:text="${reservation.utilisateur.nom
+                        + ' ' + reservation.utilisateur.prenom}"></td>
+
+                    <td th:text="${reservation.vehicule.immatriculation}"></td>
+
+                    <td th:text="${reservation.place.numero}"></td>
+
+                    <td th:text="${#temporals.format(
+                        reservation.dateDebut, 'dd/MM/yyyy HH:mm')}"></td>
+
+                    <td th:text="${#temporals.format(
+                        reservation.dateFin, 'dd/MM/yyyy HH:mm')}"></td>
+
+                    <td>
+                        <span class="statut"
+                              th:text="${reservation.statut}">
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="row-actions">
+
+                            <form th:if="${reservation.statut.name() == 'EN_ATTENTE'}"
+                                  th:action="@{/admin/reservations/{id}/confirmer(id=${reservation.id})}"
+                                  method="post">
+
+                                <button class="btn btn-success" type="submit">
+                                    Confirmer
+                                </button>
+                            </form>
+
+                            <form th:if="${reservation.statut.name() == 'EN_ATTENTE'
+                                          or reservation.statut.name() == 'CONFIRMEE'}"
+                                  th:action="@{/admin/reservations/{id}/annuler(id=${reservation.id})}"
+                                  method="post">
+
+                                <button class="btn btn-danger" type="submit">
+                                    Annuler
+                                </button>
+                            </form>
+
+                        </div>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(reservations)}">
+                    <td colspan="8">Aucune réservation enregistrée.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+
+</body>
+</html>
